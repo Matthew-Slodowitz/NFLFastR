@@ -1,0 +1,98 @@
+##Daniel Jones EPA during the 2020 season based on air yard depth
+DJ <- data2 %>%
+  filter(!is.na(epa), posteam == "NYG", passer_player_name == "D.Jones") %>%
+  mutate(
+    depth = case_when(
+      air_yards < 0 ~ "Negative",
+      air_yards >= 0 & air_yards < 10 ~ "Short",
+      air_yards >= 10 & air_yards < 20 ~ "Medium",
+      air_yards >= 20 ~ "Deep"
+    )
+  ) %>%
+  group_by(game_date, passer_player_name, depth) %>%
+  summarize(epa = mean(epa)) %>% View()
+  
+  ##Colt McCoy EPA during the 2020 season based on air yard depth
+  Colt <- data2 %>%
+  filter(!is.na(epa), posteam == "NYG", passer_player_name == "C.McCoy") %>%
+  mutate(
+    depth = case_when(
+      air_yards < 0 ~ "Negative",
+      air_yards >= 0 & air_yards < 10 ~ "Short",
+      air_yards >= 10 & air_yards < 20 ~ "Medium",
+      air_yards >= 20 ~ "Deep"
+    )
+  ) %>%
+  group_by(week, passer_player_name, depth) %>%
+  summarize(epa = mean(epa)) %>% View()
+  
+  ##Wayne Gallman Jr. rush yards gained mean EPA with plot
+  GallRush <- data2 %>%
+  filter(down <=4, play_type == 'run', posteam == "NYG", rusher_player_name == "W.Gallman" | rusher_player_name == "W.Gallman Jr.") %>%
+  mutate(
+    depth = case_when(
+      yards_gained < 0 ~ "Negative",
+      yards_gained >= 0 & yards_gained < 5 ~ "Short",
+      yards_gained >= 5 & yards_gained < 15 ~ "Medium",
+      yards_gained >= 15 ~ "Deep"
+    )
+  ) %>%
+  group_by(week, rusher_player_name, depth)%>%
+  summarize(epa = mean(epa))
+
+ggplot(data = GallRush,aes(x=week, y=epa, fill=depth))+geom_bar(stat="identity", color="black", position=position_dodge())+
+  theme_minimal()+scale_fill_brewer(palette="RdYlGn")
+
+##Saquon Barkley Mean EPA based on rush yards gained in 2019
+BarkRush <- data %>%
+  filter(down <=4, play_type == 'run', posteam == "NYG", rusher_player_name == "S.Barkley") %>%
+  mutate(
+    depth = case_when(
+      yards_gained < 0 ~ "Negative",
+      yards_gained >= 0 & yards_gained < 5 ~ "Short",
+      yards_gained >= 5 & yards_gained < 15 ~ "Medium",
+      yards_gained >= 15 ~ "Deep"
+    )
+  ) %>%
+  group_by(week, rusher_player_name, depth)%>% summarize(epa = mean(epa))
+ggplot(data = BarkRush,aes(x=week, y=epa, fill=depth))+geom_bar(stat="identity", color="black", position=position_dodge())+
+  theme_minimal()+scale_fill_brewer(palette="RdYlGn")
+
+##Saquon Barkley Mean EPA based on rush yards gained in 2018
+BarkRush2 <- data3 %>%
+  filter(down <=4, play_type == 'run', posteam == "NYG", rusher_player_name == "S.Barkley") %>%
+  mutate(
+    depth = case_when(
+      yards_gained < 0 ~ "Negative",
+      yards_gained >= 0 & yards_gained < 5 ~ "Short",
+      yards_gained >= 5 & yards_gained < 15 ~ "Medium",
+      yards_gained >= 15 ~ "Deep"
+    )
+  ) %>%
+  group_by(week, rusher_player_name, depth) %>% summarize(epa = mean(epa))
+
+ggplot(data = BarkRush2,aes(x=week, y=epa, fill=depth))+geom_bar(stat="identity", color="black", position=position_dodge())+
+  theme_minimal()+scale_fill_brewer(palette="RdYlGn")
+
+##Alfred Morris Mean EPA based on rush yards gained in 2020
+MorrisRush <- data2 %>%
+  filter(down <=4, play_type == 'run', posteam == "NYG") %>%
+  mutate(
+    depth = case_when(
+      yards_gained < 0 ~ "Negative",
+      yards_gained >= 0 & yards_gained < 10 ~ "Short",
+      yards_gained >= 10 & yards_gained < 20 ~ "Medium",
+      yards_gained >= 20 ~ "Deep"
+    )
+  ) %>%
+  group_by(game_date, rusher_player_name, depth)%>%
+  count(depth)%>% View()
+  
+##Plotting highest air yards for a receiver on an incompletion or interception in 2020 for DJ
+AirYards <- data2 %>%
+  filter(posteam == "NYG", passer_player_name == "D.Jones", incomplete_pass == 1 | interception == 1, play_type == 'pass', down <=4) %>%
+  group_by(receiver_player_name) %>%
+  summarize(air_yards = round(mean(air_yards), digits = 0))
+
+ggplot(data = AirYards,aes(x=receiver_player_name, y=air_yards))+geom_bar(stat="identity", color="black", position=position_dodge())+
+  theme_minimal()+scale_fill_brewer(palette="RdYlGn")
