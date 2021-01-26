@@ -96,3 +96,28 @@ AirYards <- data2 %>%
 
 ggplot(data = AirYards,aes(x=receiver_player_name, y=air_yards))+geom_bar(stat="identity", color="black", position=position_dodge())+
   theme_minimal()+scale_fill_brewer(palette="RdYlGn")
+
+##Analyzed cumulative EPA between Wayne Gallman in 2020 and Saquon in 2019
+GallmanNetEPA <- data2 %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "W.Gallman" | rusher_player_name == "W.Gallman Jr." | receiver_player_name == "W.Gallman" | receiver_player_name == "W.Gallman Jr.") %>%
+  arrange(week, -game_seconds_remaining) %>% view()
+GallmanNetEPA$PlayNumber <- NA
+GallmanNetEPA$PlayNumber[order(GallmanNetEPA$week,-GallmanNetEPA$game_seconds_remaining)] <- unlist(1:nrow(GallmanNetEPA))
+GallmanNetEPA$CumEPA <- NA
+GallmanNetEPA$CumEPA<- cumsum(GallmanNetEPA$epa)
+ggplot(data = GallmanNetEPA,aes(x=PlayNumber, y=CumEPA))+geom_line(color="blue") + ggtitle("Wayne Gallman Cumulative EPA in 2020 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+BarkleyNetEPA <- data %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "S.Barkley" | receiver_player_name == "S.Barkley") %>%
+  arrange(week, -game_seconds_remaining) %>% view()
+BarkleyNetEPA$PlayNumber <- NA
+BarkleyNetEPA$PlayNumber[order(BarkleyNetEPA$week,-BarkleyNetEPA$game_seconds_remaining)] <- unlist(1:nrow(BarkleyNetEPA))
+BarkleyNetEPA$CumEPA <- NA
+BarkleyNetEPA$CumEPA<- cumsum(BarkleyNetEPA$epa)
+View(BarkleyNetEPA)
+ggplot(data = BarkleyNetEPA,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Saquon Barkley Cumulative EPA in 2019 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+## Wayne Gallman top plays by EPA
+GallmanTopPlays <- data2 %>%
+  filter(down <=4, posteam == "NYG", rusher_player_name == "W.Gallman" | rusher_player_name == "W.Gallman Jr." | receiver_player_name == "W.Gallman" | receiver_player_name == "W.Gallman Jr.") %>%
+  arrange(-epa) %>% view()
