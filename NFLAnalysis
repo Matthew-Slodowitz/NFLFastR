@@ -1,0 +1,8 @@
+##Want to look at teams that had the most "offense" coming out of halftime
+ThirdQYards <- data2 %>%
+  filter(down <=4, qtr == 3) %>%
+  group_by(posteam) %>%
+  summarize(yards_gained = sum(yards_gained)) 
+
+ggplot(data = ThirdQYards,aes(x=reorder(posteam,-yards_gained), y=yards_gained))+geom_bar(stat="identity")+
+  theme_minimal()+scale_fill_brewer(palette="Blues")
