@@ -120,4 +120,52 @@ ggplot(data = BarkleyNetEPA,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") 
 ## Wayne Gallman top plays by EPA
 GallmanTopPlays <- data2 %>%
   filter(down <=4, posteam == "NYG", rusher_player_name == "W.Gallman" | rusher_player_name == "W.Gallman Jr." | receiver_player_name == "W.Gallman" | receiver_player_name == "W.Gallman Jr.") %>%
-  arrange(-epa) %>% view()
+  arrange(-epa) %>% view()\
+
+##look at Evan Engram's Cumulative EPA on a yearly basis to assess dropoff
+EngramNetEPA2017 <- data4 %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "E.Engram" | receiver_player_name == "E.Engram") %>%
+  arrange(week, -game_seconds_remaining)
+EngramNetEPA2017$PlayNumber <- NA
+EngramNetEPA2017$PlayNumber[order(EngramNetEPA2017$week,-EngramNetEPA2017$game_seconds_remaining)] <- unlist(1:nrow(EngramNetEPA2017))
+EngramNetEPA2017$CumEPA <- NA
+EngramNetEPA2017$CumEPA<- cumsum(EngramNetEPA2017$epa)
+EngramNetEPA2017$Year <- NA
+EngramNetEPA2017$Year <- 2017
+
+ggplot(data = EngramNetEPA2017,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Evan Engram Cumulative EPA in 2017 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+EngramNetEPA2018 <- data3 %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "E.Engram" | receiver_player_name == "E.Engram") %>%
+  arrange(week, -game_seconds_remaining)
+EngramNetEPA2018$PlayNumber <- NA
+EngramNetEPA2018$PlayNumber[order(EngramNetEPA2018$week,-EngramNetEPA2018$game_seconds_remaining)] <- unlist(1:nrow(EngramNetEPA2018))
+EngramNetEPA2018$CumEPA <- NA
+EngramNetEPA2018$CumEPA<- cumsum(EngramNetEPA2018$epa)
+EngramNetEPA2018$Year <- NA
+EngramNetEPA2018$Year <- 2018
+
+ggplot(data = EngramNetEPA2018,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Evan Engram Cumulative EPA in 2018 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+EngramNetEPA2019 <- data %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "E.Engram" | receiver_player_name == "E.Engram") %>%
+  arrange(week, -game_seconds_remaining)
+EngramNetEPA2019$PlayNumber <- NA
+EngramNetEPA2019$PlayNumber[order(EngramNetEPA2019$week,-EngramNetEPA2019$game_seconds_remaining)] <- unlist(1:nrow(EngramNetEPA2019))
+EngramNetEPA2019$CumEPA <- NA
+EngramNetEPA2019$CumEPA<- cumsum(EngramNetEPA2019$epa)
+EngramNetEPA2019$Year <- NA
+EngramNetEPA2019$Year <- 2019
+ggplot(data = EngramNetEPA2019,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Evan Engram Cumulative EPA in 2019 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+EngramNetEPA2020 <- data2 %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "E.Engram" | receiver_player_name == "E.Engram") %>%
+  arrange(week, -game_seconds_remaining)
+EngramNetEPA2020$PlayNumber <- NA
+EngramNetEPA2020$PlayNumber[order(EngramNetEPA2020$week,-EngramNetEPA2020$game_seconds_remaining)] <- unlist(1:nrow(EngramNetEPA2020))
+EngramNetEPA2020$CumEPA <- NA
+EngramNetEPA2020$CumEPA<- cumsum(EngramNetEPA2020$epa)
+EngramNetEPA2020$Year <- NA
+EngramNetEPA2020$Year <- 2020
+
+ggplot(data = EngramNetEPA2020,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Evan Engram Cumulative EPA in 2020 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
