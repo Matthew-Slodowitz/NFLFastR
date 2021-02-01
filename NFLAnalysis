@@ -6,3 +6,25 @@ ThirdQYards <- data2 %>%
 
 ggplot(data = ThirdQYards,aes(x=reorder(posteam,-yards_gained), y=yards_gained))+geom_bar(stat="identity")+
   theme_minimal()+scale_fill_brewer(palette="Blues")
+
+##Deshaun Watson Cumulative EPA in the 2020 season vs Daniel Jones
+DWatsonNetEPA <- data2 %>% 
+  filter(down <=4, posteam == "HOU", rusher_player_name == "D.Watson" | passer_player_name == "D.Watson") %>%
+  arrange(week, -game_seconds_remaining)
+DWatsonNetEPA$PlayNumber <- NA
+DWatsonNetEPA$PlayNumber[order(DWatsonNetEPA$week,-DWatsonNetEPA$game_seconds_remaining)] <- unlist(1:nrow(DWatsonNetEPA))
+DWatsonNetEPA$CumEPA <- NA
+DWatsonNetEPA$CumEPA<- cumsum(DWatsonNetEPA$qb_epa)
+View(DWatsonNetEPA)
+ggplot(data = DWatsonNetEPA,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Deshaun Watson Cumulative EPA in 2020 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+DJNetEPA <- data2 %>% 
+  filter(down <=4, posteam == "NYG", rusher_player_name == "D.Jones" | passer_player_name == "D.Jones") %>%
+  arrange(week, -game_seconds_remaining)
+DJNetEPA$PlayNumber <- NA
+DJNetEPA$PlayNumber[order(DJNetEPA$week,-DJNetEPA$game_seconds_remaining)] <- unlist(1:nrow(DJNetEPA))
+DJNetEPA$CumEPA <- NA
+DJNetEPA$CumEPA<- cumsum(DJNetEPA$qb_epa)
+ggplot(data = DJNetEPA,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Daniel Jones Cumulative EPA in 2020 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+view(DJNetEPA)
+
