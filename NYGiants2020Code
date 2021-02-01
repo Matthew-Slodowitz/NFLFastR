@@ -169,3 +169,29 @@ EngramNetEPA2020$Year <- NA
 EngramNetEPA2020$Year <- 2020
 
 ggplot(data = EngramNetEPA2020,aes(x=PlayNumber, y=CumEPA))+geom_line(color="red") + ggtitle("Evan Engram Cumulative EPA in 2020 by Total Snaps") + xlab("Play Number") + ylab("Cumulative Expected Points Added")
+
+##Daniel Jones Top Plays of 2020
+DJTopPlays <- data2 %>%
+  filter(down <=4, posteam == "NYG", rusher_player_name == "D.Jones" | passer_player_name == "D.Jones") %>%
+  mutate(title = paste0(season,' ',away_team,' at ',home_team),
+         down_disp = ifelse(down == 1,'1st',
+                            ifelse(down == 2,'2nd',
+                                   ifelse(down == 3,'3rd',
+                                          ifelse(down == 4,'4th',down)))),
+         qtr_disp = ifelse(qtr == 1,'1st',
+                           ifelse(qtr == 2,'2nd',
+                                  ifelse(qtr == 3,'3rd',
+                                         ifelse(qtr == 4,'4th',qtr)))),
+         time = paste0(qtr_disp,' Quarter ',time),
+         situation = paste0(down_disp,' and ',ydstogo,' on ',yrdln),
+         game_score = paste0(away_score,' - ',home_score)) %>% 
+  select(c(title,game_score,situation,time,ep,epa,wp,wpa,desc,play_type))
+
+install.packages("formattable")
+library(formattable)
+
+DJTopPlays %>% 
+  arrange(desc(epa)) %>% 
+  head(10) %>% formattable(list(epa = color_bar("lightblue")))
+
+
